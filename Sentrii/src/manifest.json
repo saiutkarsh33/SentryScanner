@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Smart Contract Scanner",
+  "version": "1.0",
+  "description": "Scan Smart Contract Addresses",
+  "permissions": ["activeTab"],
+  "action": {
+    "default_popup": "index.html"
+  }
+}
