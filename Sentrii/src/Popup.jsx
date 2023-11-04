@@ -7,7 +7,13 @@ import {
   Button,
   Paper,
   Text,
+  Overlay,
 } from "@mantine/core";
+
+
+
+
+
 
 export default function Popup() {
   const [address, setAddress] = useState("");
@@ -42,19 +48,30 @@ export default function Popup() {
   };
 
   return (
-    <Container size="xs">
-      <Paper padding="xs" radius="md">
-        <h1>Scan Smart Contract Addresses</h1>
+    <Container size="xs" style={{ backgroundColor: '#f5f5dc', padding: '10px', borderRadius: '25px' }}>
+      <Overlay
+            gradient="linear-gradient(145deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0) 100%)"
+            opacity={0.3}
+            zIndex={0}
+          />
+  <Paper padding="xs" radius="md" style={{ backgroundColor: '#f5f5dc' }}>
+  <img src="../dist/128x128.png" alt="Sentrii Logo" style={{ width: '100px', height: 'auto', marginTop: '10px' }} />
+        <h1 style={{ fontFamily: "'Open Sans', sans-serif", marginBottom: '20px', textAlign: 'center' }}>Sentrii Smart Contract Scanner</h1>
         <TextInput
           placeholder="Enter Contract Address"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
+          style={{ marginTop: '20px' }} 
         />
-        <Paper padding="sm" radius="sm" style={{ marginTop: "1rem" }}>
-          <Button variant="light" color="blue" onClick={handleScan}>
-            Scan
-          </Button>
-        </Paper>
+          <Paper padding="sm" radius="sm" style={{ marginTop: '20px', marginBottom: '20px' ,display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Button variant="light" color="blue" style={{ backgroundColor: '#0056b3', color: 'white' }} onClick={handleScan}>
+        Scan
+      </Button>
+    </Paper>
+    <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: '14px', fontWeight: 'normal', textAlign: 'center'  }}>
+      We also automatically scan the websites you visit to ensure safety
+    </p>
+
 
         {scanResult && (
           <div>
