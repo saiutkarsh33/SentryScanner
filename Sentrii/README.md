@@ -2,8 +2,8 @@
 
 To install all dependencies:
 
-```
-npm install
+`npm install``
+
 ```
 
 To build the extension to dir `Sentrii/dist`:
