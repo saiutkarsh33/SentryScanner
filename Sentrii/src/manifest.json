@@ -3,7 +3,8 @@
   "name": "Smart Contract Scanner",
   "version": "1.0",
   "description": "Scan Smart Contract Addresses",
-  "permissions": ["activeTab", "storage", "scripting"],
+  "permissions": ["tabs", "activeTab", "storage", "scripting"],
+  "host_permissions": ["http://*/*", "https://*/*"],
   "action": {
     "default_popup": "index.html",
     "default_icon": {
@@ -11,5 +12,14 @@
       "48": "48x48.png",
       "128": "128x128.png"
     }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["urlCheck.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
   }
 }
