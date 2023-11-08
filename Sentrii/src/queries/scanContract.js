@@ -1,9 +1,9 @@
 export const scanContractQuery = `
-  query($address: String!) {
+  query($address: String!, $id: Int!) {
     scannerProject(
       where: {
         address: $address,
-        chainId: 1
+        chainId: $id
       }
     ) {
       address
