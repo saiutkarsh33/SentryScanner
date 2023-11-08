@@ -6,30 +6,29 @@ export const scanContractQuery = `
         chainId: 1
       }
     ) {
-      id
       address
       name
       contractName
       whitelisted
-      txCount
       stats {
-        low
-        medium
-        high
-        critical
-        total
         percentage
         scammed
       }
-      diffs {
-        id
-        address
-        network
-        name
-        projectName
-        score
-        createdAt
-      }
+      coreIssues {
+          scwId
+        scwTitle
+        scwDescription
+        issues {
+          id
+          confidence
+          impact
+          description
+          start
+            end
+          data
+          snippet
+          }
+        }
     }
   }
 `;

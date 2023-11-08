@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp src/manifest.json dist/manifest.json && cp src/assets/* dist/",
+    "copyAll": "cp src/manifest.json dist/ && cp src/assets/* dist/ && cp src/urlCheck.js dist/ && cp src/background.js dist/",
+    "build": "vite build && npm run copyAll",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
