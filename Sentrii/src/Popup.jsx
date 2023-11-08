@@ -8,12 +8,29 @@ import {
   Paper,
   Text,
   Overlay,
+  Select,
 } from "@mantine/core";
 
 export default function Popup() {
   const [address, setAddress] = useState("");
+  const [id, setId] = useState(0);
   const [scanResult, setScanResult] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
+  const [totalLiquidity, setTotalLiquidity] = useState(null);
+  const [isell, setIell] = useState(null);
+  const [isalp, setIsalp] = useState(null);
+
+
+
+  const handleNetworkChange = (value) => {
+    // This will set the id based on the selection
+    const networkIdMap = {
+      eth: 1,
+      bnb: 2,
+    };
+    setId(networkIdMap[value]);
+  };
+
 
   const handleScan = () => {
     setScanResult(null);
@@ -30,7 +47,7 @@ export default function Popup() {
         },
         body: JSON.stringify({
           query: scanContractQuery,
-          variables: { address },
+          variables: { address, id },
         }),
       })
         .then((response) => response.json())
@@ -58,7 +75,7 @@ export default function Popup() {
       style={{
         backgroundColor: "#f5f5dc",
         padding: "10px",
-        borderRadius: "25px",
+        borderRadius: "0px",
       }}
     >
       <Overlay
@@ -92,6 +109,15 @@ export default function Popup() {
         >
           Sentrii Smart Contract Scanner
         </h1>
+
+        <Select
+        label="Pick a network"
+        placeholder="Pick a network"
+        data={['eth', 'bnb']}
+        onChange={handleNetworkChange}
+        style={{ marginTop: "20px" }}
+        required 
+      />
         <TextInput
           placeholder="Enter Contract Address"
           value={address}
@@ -135,8 +161,11 @@ export default function Popup() {
             <h2
               style={{
                 fontFamily: "'Open Sans', sans-serif",
+                marginTop: "20px",
                 marginBottom: "20px",
                 textAlign: "center",
+                fontWeight: 'bold', // This makes the text bold
+                textDecoration: 'underline' 
               }}
             >
               Results
@@ -155,11 +184,12 @@ export default function Popup() {
                 style={{
                   fontWeight: "bold",
                   fontFamily: "'Open Sans', sans-serif",
+                  paddingTop: "10px"
                 }}
               >
                 Name:
               </Text>
-              <Text style={{ fontFamily: "'Open Sans', sans-serif" }}>
+              <Text style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px" }}>
                 {scanResult.name}
               </Text>
             </Paper>
@@ -178,6 +208,7 @@ export default function Popup() {
                 style={{
                   fontWeight: "bold",
                   fontFamily: "'Open Sans', sans-serif",
+                  paddingTop: "10px"
                 }}
               >
                 Address:
@@ -187,6 +218,7 @@ export default function Popup() {
                   style={{
                     fontFamily: "'Open Sans', sans-serif",
                     fontSize: "14px",
+                    paddingBottom: "10px"
                   }}
                 >
                   {scanResult.address}
@@ -207,11 +239,12 @@ export default function Popup() {
                 style={{
                   fontWeight: "bold",
                   fontFamily: "'Open Sans', sans-serif",
+                  paddingTop: "10px",
                 }}
               >
                 Whitelisted:
               </Text>
-              <Text style={{ fontFamily: "'Open Sans', sans-serif" }}>
+              <Text style={{ fontFamily: "'Open Sans', sans-serif" , paddingBottom: "6px"}}>
                 {scanResult.whitelisted ? "Yes" : "No"}
               </Text>
             </Paper>
@@ -224,7 +257,7 @@ export default function Popup() {
                 textAlign: "center",
                 backgroundColor:
                   scanResult.stats.percentage < 50
-                    ? "red"
+                    ?  "#cc0000"
                     : scanResult.stats.percentage >= 50 &&
                       scanResult.stats.percentage <= 75
                     ? "yellow"
@@ -235,6 +268,7 @@ export default function Popup() {
                 style={{
                   fontWeight: "bold",
                   fontFamily: "'Open Sans', sans-serif",
+                  paddingTop: "10px"
                 }}
               >
                 Trust Score:
@@ -248,6 +282,7 @@ export default function Popup() {
                     fontWeight: "bold",
                     fontSize: "large",
                     color: "#fff",
+                    paddingBottom: "10px",
                   }}
                 >
                   Warning! Could be malicious
@@ -255,17 +290,57 @@ export default function Popup() {
               )}
               {scanResult.stats.percentage >= 50 &&
                 scanResult.stats.percentage <= 75 && (
-                  <Text style={{ fontSize: "small", color: "#000" }}>
+                  <Text style={{ fontSize: "small", color: "#000" ,paddingBottom: "10px" }}>
                     Tread with caution
                   </Text>
                 )}
               {scanResult.stats.percentage > 75 && (
-                <Text style={{ color: "#fff" }}>All Good</Text>
+                <Text style={{ color: "#fff" , paddingBottom: "10px"}}>All Good</Text>
               )}
             </Paper>
-            <text>
-              {scanResult.coreIssues[0].scwDescription}
-            </text>
+            <div>
+  {/* Single Paper component to contain "Core issues:" and all descriptions */}
+  <Paper
+    padding="sm"
+    radius="0"
+    shadow="xs"
+    style={{
+      marginBottom: "1rem",
+      textAlign: "center",
+      backgroundColor: 'white',
+    }}
+  >
+    {/* Heading "Core issues:" */}
+    <div
+      style={{
+        fontWeight: "bold",
+        fontFamily: "'Open Sans', sans-serif",
+        paddingTop: "10px",
+        paddingBottom: "5px"
+      }}
+    >
+      Core issues:
+    </div>
+
+    {/* Check if there are any issues at all */}
+    {scanResult.coreIssues.some(issueItem => issueItem.issues && issueItem.issues.length > 0) ? (
+      // If there are issues, map over them and display
+      scanResult.coreIssues.map((issueItem, index) => (
+        issueItem.issues && issueItem.issues.length > 0 && (
+          <div key={index} style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px", fontSize: "13px" }}>
+            - {issueItem.scwDescription}
+          </div>
+        )
+      ))
+    ) : (
+      // If there are no issues at all, display "Nil"
+      <div style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px", fontSize: "13px" }}>Nil</div>
+    )}
+  </Paper>
+</div>
+
+
+
           </div>
         )}
       </Paper>
