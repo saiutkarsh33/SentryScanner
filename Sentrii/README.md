@@ -1,9 +1,11 @@
 # Sentrii Extension
 
+WHen you are in the `/Sentrii` directory, run the following commands.
+
 To install all dependencies:
 
 ```
-npm install
+npm install --no-package-lock
 ```
 
 To build the extension to the directory: `/Sentrii/dist`:
