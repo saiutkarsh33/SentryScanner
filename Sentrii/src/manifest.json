@@ -19,6 +19,12 @@
       "js": ["urlCheck.js"]
     }
   ],
+  "web_accessible_resources": [
+    {
+      "resources": ["128x128.png"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "background": {
     "service_worker": "background.js"
   }
