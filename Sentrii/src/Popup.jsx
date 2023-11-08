@@ -40,6 +40,7 @@ export default function Popup() {
           } else {
             const result = data.data.scannerProject;
             setScanResult(result);
+            console.log(result);
           }
           setIsScanning(false);
         })
@@ -49,6 +50,7 @@ export default function Popup() {
         });
     }
   };
+
 
   return (
     <Container
@@ -261,6 +263,9 @@ export default function Popup() {
                 <Text style={{ color: "#fff" }}>All Good</Text>
               )}
             </Paper>
+            <text>
+              {scanResult.coreIssues[0].scwDescription}
+            </text>
           </div>
         )}
       </Paper>
