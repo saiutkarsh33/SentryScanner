@@ -9,16 +9,16 @@ import {
   Text,
   Overlay,
   Select,
+  Switch,
 } from "@mantine/core";
 
 export default function Popup() {
   const [address, setAddress] = useState("");
   const [id, setId] = useState(0);
   const [scanResult, setScanResult] = useState(null);
+  const [scanLiquidResult, setScanLiquidResult ] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
-  const [totalLiquidity, setTotalLiquidity] = useState(null);
-  const [isell, setIell] = useState(null);
-  const [isalp, setIsalp] = useState(null);
+  const [checked, setChecked] = useState(false);
 
 
 
@@ -56,6 +56,10 @@ export default function Popup() {
             console.log("GraphQL Error:", data.errors);
           } else {
             const result = data.data.scannerProject;
+            if (checked) {
+            const liquidResult = data.data.scannerLiquidityAnalysis;
+            setScanLiquidResult(liquidResult);
+            }
             setScanResult(result);
             console.log(result);
           }
@@ -66,6 +70,12 @@ export default function Popup() {
           setIsScanning(false);
         });
     }
+  };
+
+  const handleSwitch = () => {
+    // Toggle the 'checked' state to its opposite value
+    setChecked(prevChecked => !prevChecked);
+
   };
 
 
@@ -110,6 +120,17 @@ export default function Popup() {
           Sentrii Smart Contract Scanner
         </h1>
 
+
+        <Switch
+        checked={checked}
+        onChange={handleSwitch}
+        label="Liquidity Analysis"
+        // If you want the label click to also toggle the switch, you can wrap the Switch in a Label component
+        // and call the handleSwitch function when the Label is clicked
+        labelProps={{ onClick: handleSwitch }}
+        id="liquidity-switch"
+      />
+
         <Select
         label="Pick a network"
         placeholder="Pick a network"
@@ -118,6 +139,7 @@ export default function Popup() {
         style={{ marginTop: "20px" }}
         required 
       />
+        
         <TextInput
           placeholder="Enter Contract Address"
           value={address}
@@ -338,6 +360,93 @@ export default function Popup() {
     )}
   </Paper>
 </div>
+        
+        {checked && (
+          <div>
+          <Paper
+              padding="sm"
+              radius={0}
+              shadow="xs"
+              style={{
+                marginBottom: "1rem",
+                backgroundColor: "#fff",
+                textAlign: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontFamily: "'Open Sans', sans-serif",
+                  paddingTop: "14px"
+                }}
+              >
+                Total Liquidity:
+              </Text>
+              <Text style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px" }}>
+  ${Math.floor(Number(scanLiquidResult.totalLiquidity))}
+</Text>
+            </Paper>
+
+
+            <Paper
+              padding="sm"
+              radius={0}
+              shadow="xs"
+              style={{
+                marginBottom: "1rem",
+                backgroundColor: "#fff",
+                textAlign: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontFamily: "'Open Sans', sans-serif",
+                  paddingTop: "14px"
+                }}
+              >
+                Is there enough liquidity locked?
+              </Text>
+              <Text style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px" }}>
+  {scanLiquidResult.isEnoughLiquidityLocked ? 'Yes' : 'No'}
+</Text>
+            </Paper>
+
+
+
+            <Paper
+              padding="sm"
+              radius={0}
+              shadow="xs"
+              style={{
+                marginBottom: "1rem",
+                backgroundColor: "#fff",
+                textAlign: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontFamily: "'Open Sans', sans-serif",
+                  paddingTop: "14px"
+                }}
+              >
+                Is there adequate liquidity present?
+              </Text>
+              <Text style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px" }}>
+  {scanLiquidResult.isAdequateLiquidityPresent ? 'Yes' : 'No'}
+</Text>
+            </Paper>
+
+
+
+
+
+            
+
+         </div>
+
+        )}
 
 
 
