@@ -27,7 +27,7 @@ To load the (unpacked) extension on Chrome:
 
 ---
 
-\*\*Take note that De.Fi API calls are limited by credits. Hence do replace `"X-Api-Key"` in `/src/Popup.jsx` with own key if scanner fails to give anymore results.
+**Take note that De.Fi API calls are limited by credits. Hence do replace `"X-Api-Key"` in `/src/Popup.jsx` with own key if scanner fails to give anymore results.**
 
 Head over to [De.fi's API Dashboard page to get a new key.](https://de.fi/api/dashboard)
 
