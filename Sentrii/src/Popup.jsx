@@ -23,6 +23,15 @@ export default function Popup() {
 
 
 
+  const impactRank = {
+    'Critical': 1,
+    'High': 2,
+    'Medium': 3,
+    'Low': 4,
+    'Informational': 5,
+    'Optimisation': 6
+  };
+
   const handleNetworkChange = (value) => {
     // This will set the id based on the selection
     const networkIdMap = {
@@ -323,27 +332,35 @@ export default function Popup() {
     </div>
 
     {/* Check if there are any issues at all */}
-    {scanResult.coreIssues.some(issueItem => issueItem.issues && issueItem.issues.length > 0) ? (
-      // If there are issues, map over them and display
-      scanResult.coreIssues.map((issueItem, index) => (
-        issueItem.issues && issueItem.issues.length > 0 && (
-          <div key={index} style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px", fontSize: "13px" }}>
-            - {issueItem.scwDescription}
-          </div>
-        )
-      ))
-    ) : (
-      // If there are no issues at all, display "Nil"
-      <div style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px", fontSize: "13px" }}>Nil</div>
-    )}
+    {scanResult.coreIssues.sort((a, b) => {
+      const aImpact = a.issues && a.issues.length > 0 ? a.issues[0].impact : 'Informational';
+      const bImpact = b.issues && b.issues.length > 0 ? b.issues[0].impact : 'Informational';
+      return impactRank[aImpact] - impactRank[bImpact];
+    })
+    .some(issueItem => issueItem.issues && issueItem.issues.length > 0) ? (
+  // If there are issues, map over them and display
+
+
+  scanResult.coreIssues.map((issueItem, index) => (
+    issueItem.issues && issueItem.issues.length > 0 ? (
+      <div 
+        key={index} 
+        style={{ 
+          fontFamily: "'Open Sans', sans-serif", 
+          paddingBottom: "10px", 
+          fontSize: "13px",
+          fontWeight: issueItem.issues[0].impact === "High" || issueItem.issues[0].impact === "Critical" ? 'bold' : 'normal' // Check for 'High' or 'Critical' impact to set fontWeight
+        }}
+      >
+        - {issueItem.scwDescription}
+      </div>
+    ) : null
+  ))
+) : (
+  // If there are no issues at all, display "Nil"
+  <div style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px", fontSize: "13px" }}>Nil</div>
+)}
   </Paper>
-
-
-
-
-
-
-
             <Paper
               padding="sm"
               radius="0"
@@ -456,11 +473,7 @@ export default function Popup() {
     {scanLiquidResult.isEnoughLiquidityLocked ? 'Yes' : 'No'}
   </Text>
 </Paper>
-
-
-
-
-            <Paper
+    <Paper
   padding="sm"
   radius={0}
   shadow="xs"
