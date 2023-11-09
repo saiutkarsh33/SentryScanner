@@ -333,6 +333,27 @@ export default function Popup() {
 
     {/* Check if there are any issues at all */}
     {scanResult.coreIssues.sort((a, b) => {
+
+      // Deliverable: before you get a.issues[0] and b.issues[0] you sort the relevant issues based on impact if the length is >1
+      if (a.issues.length > 1) {
+      a.issues.sort((r, v) => {
+        const rImpact = r.impact;
+        const vImpact = v.impact;
+        return impactRank[rImpact] - impactRank[vImpact]
+      });
+    }
+
+
+
+    if (b.issues.length > 1) {
+      b.issues.sort((s, t) => {
+        const sImpact = t.impact;
+        const tImpact = t.impact;
+        return impactRank[sImpact] - impactRank[tImpact]
+      });
+    }
+
+
       const aImpact = a.issues && a.issues.length > 0 ? a.issues[0].impact : 'Informational';
       const bImpact = b.issues && b.issues.length > 0 ? b.issues[0].impact : 'Informational';
       return impactRank[aImpact] - impactRank[bImpact];
