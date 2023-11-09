@@ -1,6 +1,6 @@
 # SentryScanner Extension
 
-#### MAKE SURE WHEN TESTING THE URL CHECKER, PLEASE INITIALISE THE FASTAPI DEPLOYMENT OF OUR ML MODEL FIRST - find out more at `/ML_Model`.
+#### MAKE SURE WHEN TESTING THE URL CHECKER, PLEASE INITIALISE THE FASTAPI DEPLOYMENT OF OUR ML MODEL FIRST - find out more at the [ML_Model dir](https://github.com/saiutkarsh33/SentryWallet/tree/main/ML_Model).
 
 ---
 
