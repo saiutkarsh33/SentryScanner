@@ -1,14 +1,14 @@
-# Sentrii Extension
+# SentryScanner Extension
 
-WHen you are in the `/Sentrii` directory, run the following commands.
+WHen you are in the `/sentryscanner` directory, run the following commands.
 
 To install all dependencies:
 
 ```
-npm install --no-package-lock
+npm install
 ```
 
-To build the extension to the directory: `/Sentrii/dist`:
+To build the extension to the directory: `/sentryscanner/dist`:
 
 ```
 npm run build
