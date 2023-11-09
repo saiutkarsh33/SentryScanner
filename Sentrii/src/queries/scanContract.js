@@ -1,11 +1,11 @@
 export const scanContractQuery = `
   query($address: String!, $id: Int!) {
     scannerProject(
-      where: {
+      where: { 
         address: $address,
         chainId: $id
-      }
-    ) {
+      }) 
+    {
       address
       name
       contractName
@@ -29,6 +29,16 @@ export const scanContractQuery = `
           snippet
           }
         }
+    }
+    scannerLiquidityAnalysis(
+      where: { 
+        address: $address,
+        chainId: $id
+      }) 
+    {
+      totalLiquidity
+   isEnoughLiquidityLocked
+   isAdequateLiquidityPresent
     }
   }
 `;
