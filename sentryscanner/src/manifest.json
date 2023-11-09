@@ -1,8 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "Smart Contract Scanner",
+  "name": "SentryScanner",
   "version": "1.0",
-  "description": "Scan Smart Contract Addresses",
+  "icons": {
+    "16": "16x16.png",
+    "48": "48x48.png",
+    "128": "128x128.png"
+  },
+  "description": "Browse safely with SentryScanner's URL Checker and Smart Contract Address Scanner!",
   "permissions": ["tabs", "activeTab", "storage", "scripting"],
   "host_permissions": ["http://*/*", "https://*/*"],
   "action": {
