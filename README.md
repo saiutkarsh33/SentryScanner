@@ -7,11 +7,11 @@ Our solution includes having a ML model to recognise words commonly used in phis
 For the source code of our **ML model**, go to the directory: `/ML Model`
 
 ```
-cd ML_Model/
+cd ML_Model
 ```
 
-For the source code of our **extension**, go to the directory: `/Sentrii`
+For the source code of our **extension**, go to the directory: `/sentryscanner`
 
 ```
-cd Sentrii
+cd sentryscanner
 ```
