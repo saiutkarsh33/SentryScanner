@@ -19,6 +19,7 @@ export default function Popup() {
   const [scanLiquidResult, setScanLiquidResult ] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [cannotFind, setCannotFind] = useState(false);
 
 
 
@@ -33,6 +34,7 @@ export default function Popup() {
 
 
   const handleScan = () => {
+    setCannotFind(false);
     setScanResult(null);
     setIsScanning(true);
 
@@ -54,7 +56,12 @@ export default function Popup() {
         .then((data) => {
           if (data.errors) {
             console.log("GraphQL Error:", data.errors);
+            setCannotFind(true);
+
           } else {
+            if (!data.data) {
+              setCannotFind(true);
+            }
             const result = data.data.scannerProject;
             if (checked) {
             const liquidResult = data.data.scannerLiquidityAnalysis;
@@ -146,6 +153,17 @@ export default function Popup() {
           onChange={(e) => setAddress(e.target.value)}
           style={{ marginTop: "20px" }}
         />
+{cannotFind ? (
+  <Text style={{
+    fontFamily: "'Open Sans', sans-serif",
+    fontSize: 'small',
+    fontWeight: 'bold',
+    color: 'red',
+    textAlign: 'center'
+  }}>
+    Token not found in network selected
+  </Text>
+) : null}
         <Paper
           padding="sm"
           radius="sm"
@@ -157,6 +175,8 @@ export default function Popup() {
             alignItems: "center",
           }}
         >
+
+
           <Button
             variant="light"
             color="blue"
@@ -167,6 +187,11 @@ export default function Popup() {
             {isScanning ? "Scanning..." : "Scan"}
           </Button>
         </Paper>
+
+
+        
+
+
         <p
           style={{
             fontFamily: "'Open Sans', sans-serif",
@@ -177,6 +202,7 @@ export default function Popup() {
         >
           We also automatically scan the websites you visit to ensure safety
         </p>
+
 
         {scanResult && (
           <div>
@@ -270,12 +296,60 @@ export default function Popup() {
                 {scanResult.whitelisted ? "Yes" : "No"}
               </Text>
             </Paper>
+
+
+
+            {/* Single Paper component to contain "Core issues:" and all descriptions */}
+  <Paper
+    padding="sm"
+    radius="0"
+    shadow="xs"
+    style={{
+      marginBottom: "1rem",
+      textAlign: "center",
+      backgroundColor: 'white',
+    }}
+  >
+    {/* Heading "Core issues:" */}
+    <div
+      style={{
+        fontWeight: "bold",
+        fontFamily: "'Open Sans', sans-serif",
+        paddingTop: "10px",
+        paddingBottom: "5px"
+      }}
+    >
+      Core issues:
+    </div>
+
+    {/* Check if there are any issues at all */}
+    {scanResult.coreIssues.some(issueItem => issueItem.issues && issueItem.issues.length > 0) ? (
+      // If there are issues, map over them and display
+      scanResult.coreIssues.map((issueItem, index) => (
+        issueItem.issues && issueItem.issues.length > 0 && (
+          <div key={index} style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px", fontSize: "13px" }}>
+            - {issueItem.scwDescription}
+          </div>
+        )
+      ))
+    ) : (
+      // If there are no issues at all, display "Nil"
+      <div style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px", fontSize: "13px" }}>Nil</div>
+    )}
+  </Paper>
+
+
+
+
+
+
+
             <Paper
               padding="sm"
               radius="0"
               shadow="xs"
               style={{
-                marginBottom: "1rem",
+                
                 textAlign: "center",
                 backgroundColor:
                   scanResult.stats.percentage < 50
@@ -320,45 +394,11 @@ export default function Popup() {
                 <Text style={{ color: "#fff" , paddingBottom: "10px"}}>All Good</Text>
               )}
             </Paper>
+            <Text style={{ textAlign: 'center', fontSize: 'small', paddingBottom: '10px' }}>
+  Trust score does not take into account liquidity analysis.
+</Text>
             <div>
-  {/* Single Paper component to contain "Core issues:" and all descriptions */}
-  <Paper
-    padding="sm"
-    radius="0"
-    shadow="xs"
-    style={{
-      marginBottom: "1rem",
-      textAlign: "center",
-      backgroundColor: 'white',
-    }}
-  >
-    {/* Heading "Core issues:" */}
-    <div
-      style={{
-        fontWeight: "bold",
-        fontFamily: "'Open Sans', sans-serif",
-        paddingTop: "10px",
-        paddingBottom: "5px"
-      }}
-    >
-      Core issues:
-    </div>
-
-    {/* Check if there are any issues at all */}
-    {scanResult.coreIssues.some(issueItem => issueItem.issues && issueItem.issues.length > 0) ? (
-      // If there are issues, map over them and display
-      scanResult.coreIssues.map((issueItem, index) => (
-        issueItem.issues && issueItem.issues.length > 0 && (
-          <div key={index} style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px", fontSize: "13px" }}>
-            - {issueItem.scwDescription}
-          </div>
-        )
-      ))
-    ) : (
-      // If there are no issues at all, display "Nil"
-      <div style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px", fontSize: "13px" }}>Nil</div>
-    )}
-  </Paper>
+  
 </div>
         
         {checked && (
@@ -389,54 +429,62 @@ export default function Popup() {
 
 
             <Paper
-              padding="sm"
-              radius={0}
-              shadow="xs"
-              style={{
-                marginBottom: "1rem",
-                backgroundColor: "#fff",
-                textAlign: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontFamily: "'Open Sans', sans-serif",
-                  paddingTop: "14px"
-                }}
-              >
-                Is there enough liquidity locked?
-              </Text>
-              <Text style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px" }}>
-  {scanLiquidResult.isEnoughLiquidityLocked ? 'Yes' : 'No'}
-</Text>
-            </Paper>
+  padding="sm"
+  radius={0}
+  shadow="xs"
+  style={{
+    marginBottom: "1rem",
+    backgroundColor: scanLiquidResult.isEnoughLiquidityLocked ? "#fff" : "#cc0000",
+    textAlign: "center",
+  }}
+>
+  <Text
+    style={{
+      fontWeight: "bold",
+      fontFamily: "'Open Sans', sans-serif",
+      paddingTop: "14px",
+      color: scanLiquidResult.isEnoughLiquidityLocked ? "#000" : "#fff"
+    }}
+  >
+    Is there enough liquidity locked?
+  </Text>
+  <Text style={{ 
+    fontFamily: "'Open Sans', sans-serif", 
+    paddingBottom: "10px",
+    color: scanLiquidResult.isEnoughLiquidityLocked ? "#000" : "#fff"
+  }}>
+    {scanLiquidResult.isEnoughLiquidityLocked ? 'Yes' : 'No'}
+  </Text>
+</Paper>
+
 
 
 
             <Paper
-              padding="sm"
-              radius={0}
-              shadow="xs"
-              style={{
-                marginBottom: "1rem",
-                backgroundColor: "#fff",
-                textAlign: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontFamily: "'Open Sans', sans-serif",
-                  paddingTop: "14px"
-                }}
-              >
-                Is there adequate liquidity present?
-              </Text>
-              <Text style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px" }}>
-  {scanLiquidResult.isAdequateLiquidityPresent ? 'Yes' : 'No'}
-</Text>
-            </Paper>
+  padding="sm"
+  radius={0}
+  shadow="xs"
+  style={{
+    marginBottom: "1rem",
+    backgroundColor: scanLiquidResult.isAdequateLiquidityPresent ? "#fff" : "#cc0000",
+    textAlign: "center",
+  }}
+>
+  <Text
+    style={{
+      fontWeight: "bold",
+      fontFamily: "'Open Sans', sans-serif",
+      paddingTop: "14px",
+      color: scanLiquidResult.isAdequateLiquidityPresent ? "#000" : "#fff"
+    }}
+  >
+    Is there adequate liquidity present?
+  </Text>
+  <Text style={{ fontFamily: "'Open Sans', sans-serif", paddingBottom: "10px", color: scanLiquidResult.isAdequateLiquidityPresent ? "#000" : "#fff" }}>
+    {scanLiquidResult.isAdequateLiquidityPresent ? 'Yes' : 'No'}
+  </Text>
+</Paper>
+
 
 
 
