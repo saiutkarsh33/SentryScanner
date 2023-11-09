@@ -3,7 +3,6 @@ Numpy
 Seaborn
 Matplotlib
 Plotly
-sklearn
 scikit-learn
 nltk
 joblib
