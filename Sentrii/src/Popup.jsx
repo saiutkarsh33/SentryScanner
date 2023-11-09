@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { scanContractQuery } from "./queries/scanContract.js";
 import {
   Container,
@@ -20,6 +20,24 @@ export default function Popup() {
   const [isScanning, setIsScanning] = useState(false);
   const [checked, setChecked] = useState(false);
   const [cannotFind, setCannotFind] = useState(false);
+  const [haveCritical, setHaveCritical] = useState(false);
+
+
+  useEffect(() => {
+    // You want this to run only after a scan is completed, not while it is scanning
+    if (!isScanning && scanResult) {
+      const hasCriticalIssue = scanResult.coreIssues?.some(issueGroup => 
+        issueGroup.issues?.some(issue => issue.impact === 'High' || issue.impact === 'Critical')
+      );
+  
+      setHaveCritical(hasCriticalIssue);
+    }
+    // This will trigger the effect to re-run when isScanning changes to false, indicating a scan was completed
+  }, [isScanning, scanResult]);
+
+  // Sort the core issues by impact rank if they exist
+ 
+  
 
 
 
@@ -46,6 +64,7 @@ export default function Popup() {
     setCannotFind(false);
     setScanResult(null);
     setIsScanning(true);
+    setHaveCritical(false);
 
     if (address != "") {
       setScanResult(null);
@@ -54,7 +73,7 @@ export default function Popup() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Api-Key": "338a769238d845ce9a421b093082dcfb",
+          "X-Api-Key": "24ecca376cbd4d6d92224dc6c0f72bac",
         },
         body: JSON.stringify({
           query: scanContractQuery,
@@ -353,9 +372,10 @@ export default function Popup() {
       });
     }
 
-
+      
       const aImpact = a.issues && a.issues.length > 0 ? a.issues[0].impact : 'Informational';
       const bImpact = b.issues && b.issues.length > 0 ? b.issues[0].impact : 'Informational';
+      
       return impactRank[aImpact] - impactRank[bImpact];
     })
     .some(issueItem => issueItem.issues && issueItem.issues.length > 0) ? (
@@ -392,8 +412,8 @@ export default function Popup() {
                 backgroundColor:
                   scanResult.stats.percentage < 50
                     ?  "#cc0000"
-                    : scanResult.stats.percentage >= 50 &&
-                      scanResult.stats.percentage <= 75
+                    : ((scanResult.stats.percentage >= 50 &&
+                      scanResult.stats.percentage <= 75) || haveCritical)
                     ? "yellow"
                     : "green",
               }}
@@ -422,13 +442,13 @@ export default function Popup() {
                   Warning! Could be malicious
                 </Text>
               )}
-              {scanResult.stats.percentage >= 50 &&
-                scanResult.stats.percentage <= 75 && (
+              {((scanResult.stats.percentage >= 50 &&
+                scanResult.stats.percentage <= 75) || haveCritical) && (
                   <Text style={{ fontSize: "small", color: "#000" ,paddingBottom: "10px" }}>
                     Tread with caution
                   </Text>
                 )}
-              {scanResult.stats.percentage > 75 && (
+              {(scanResult.stats.percentage > 75 && !haveCritical) &&(
                 <Text style={{ color: "#fff" , paddingBottom: "10px"}}>All Good</Text>
               )}
             </Paper>
@@ -439,7 +459,7 @@ export default function Popup() {
   
 </div>
         
-        {checked && (
+        {checked && scanLiquidResult && (
           <div>
           <Paper
               padding="sm"
