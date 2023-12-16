@@ -15,3 +15,4 @@ For the source code of our **extension**, go to the directory: `/sentryscanner`
 ```
 cd sentryscanner
 ```
+Edit: We won the hackathon!
