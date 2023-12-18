@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "start": "parcel src/Popup.jsx",
-    "build": "parcel build src/popup.jsx src/background.js src/urlCheck.js --dist-dir dist && node copy-manifest.cjs",
+    "build": "npm run clean && parcel build src/default_popup.html src/*.jsx src/*.js && node copy.cjs",
+    "clean": "rm -rf dist",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
-    "@mantine/core": "^7.1.7",
+    "@mantine/core": "^7.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
