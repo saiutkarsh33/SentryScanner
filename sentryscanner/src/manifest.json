@@ -3,19 +3,19 @@
   "name": "SentryScanner",
   "version": "1.0",
   "icons": {
-    "16": "16x16.png",
-    "48": "48x48.png",
-    "128": "128x128.png"
+    "16": "assets/16x16.png",
+    "48": "assets/48x48.png",
+    "128": "assets/128x128.png"
   },
   "description": "Browse safely with SentryScanner's URL Checker and Smart Contract Address Scanner!",
   "permissions": ["tabs", "activeTab", "storage", "scripting"],
   "host_permissions": ["http://*/*", "https://*/*"],
   "action": {
-    "default_popup": "index.html",
+    "default_popup": "default_popup.html",
     "default_icon": {
-      "16": "16x16.png",
-      "48": "48x48.png",
-      "128": "128x128.png"
+      "16": "assets/16x16.png",
+      "48": "assets/48x48.png",
+      "128": "assets/128x128.png"
     }
   },
   "content_scripts": [
