@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "parcel src/Popup.jsx",
-    "build": "npm run clean && parcel build src/default_popup.html src/*.jsx src/*.js  && node copy.cjs",
+    "build": "npm run clean && parcel build src/default_popup.html src/*.jsx src/*.js && node copy.cjs",
     "clean": "rm -rf dist",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
